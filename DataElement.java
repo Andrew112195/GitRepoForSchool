@@ -1,3 +1,4 @@
+
 public abstract class DataElement
 {
     public abstract boolean equals(DataElement otherElement);
@@ -26,3 +27,4 @@ public abstract class DataElement
       //Postcondition: A copy of this object is created and
       //               a reference of the copy is returned.
 }
+
