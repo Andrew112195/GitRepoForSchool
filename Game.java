@@ -16,6 +16,10 @@ public class Game {
     public int getRound() {
         return round;
     }
+    
+    public void resetRound(){
+      round = 0;
+    }
 
     public void incrementRound() {
         round += 1;
@@ -25,6 +29,16 @@ public class Game {
         return CPUWeapon;
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public void setCPUWeapon(Weapon CPUWeapon) {
+        this.CPUWeapon = CPUWeapon;
+    }
+    
+    
+
     public int getROUNDS_PER_GAME() {
         return ROUNDS_PER_GAME;
     }
@@ -32,7 +46,7 @@ public class Game {
     public void generateComputerPlay() {
         Random generator = new Random();
         int playComputerInt = generator.nextInt(4);
-        CPUWeapon = new Weapon(playComputerInt);
+        setCPUWeapon(new Weapon(playComputerInt));
     }
 
     public String displayRules() {
@@ -43,7 +57,9 @@ public class Game {
                 + "3- Paper wins over Rock, but loses against Scissors and Saw. \n"
                 + "4- Saw wins over Scissors and Paper, but loses against Rock.\n"
                 + "5- If player and computer make the same selection, there is a tie. \n"
-                + "6- Winner of the game against the computer is one who won more rounds.  \n\n";
+                + "6- Winner of the game against the computer is one who won more rounds.  \n\n"
+                + "Winner of the game against the computer is one who won more rounds (must account for ties). \n"
+                + "Overall human winner is based on the greater number of won games against the comand least games lost (must account for tie between human players) \n\n";
 
         return rules;
 

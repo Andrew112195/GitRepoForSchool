@@ -9,18 +9,17 @@ public class GameDriverForm extends JFrame  {
    
     private static Player player1;
     private static Player player2;
-    final static int PLAYER_AMOUNT = 2;
-    public static Player[] players = new Player[PLAYER_AMOUNT];       
+    public static Player[] players = new Player[2];       
     private static GameMenu menu = new GameMenu();
-    private static Game game;
     private static GameDriverForm gameScreen;
+    private static Game game;
+    
     
     private final ImageIcon rockImage;
     private final ImageIcon paperImage;
     private final ImageIcon scissorsImage;
     private final ImageIcon sawImage;
     
-    private static int selectionMenu;
     private static String ResultPlayerPc; 
   
 
@@ -28,7 +27,7 @@ public class GameDriverForm extends JFrame  {
         initComponents();
         panelPlayer1Title.setText(game.getPlayer(0).getName() + " selects your weapon");
         panelPlayer2Title.setText(game.getPlayer(1).getName() + " selects your weapon");
-        unenablePlayer2Buttons();
+        disablePlayer2Buttons();
         rockImage = new ImageIcon("src/images/rock.png");
         paperImage = new ImageIcon("src/images/paper.png");
         scissorsImage = new ImageIcon("src/images/scissors.png");
@@ -301,30 +300,30 @@ public class GameDriverForm extends JFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void rockP1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rockP1BtnActionPerformed
-      player1ChoiceLabel.setIcon(rockImage);
-      game.assignPlayerWeapon(0, new Weapon(0));
-       unenablePlayer1Buttons();
-       enablePlayer2Buttons();
+        player1ChoiceLabel.setIcon(rockImage);
+        game.assignPlayerWeapon(0, new Weapon(0));
+        disablePlayer1Buttons();
+        enablePlayer2Buttons();
     }//GEN-LAST:event_rockP1BtnActionPerformed
 
     private void paperP1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paperP1BtnActionPerformed
        player1ChoiceLabel.setIcon(paperImage);
        game.assignPlayerWeapon(0, new Weapon(1));
-       unenablePlayer1Buttons();
+       disablePlayer1Buttons();
        enablePlayer2Buttons();
     }//GEN-LAST:event_paperP1BtnActionPerformed
 
     private void scissorsP1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scissorsP1BtnActionPerformed
         player1ChoiceLabel.setIcon(scissorsImage);
         game.assignPlayerWeapon(0, new Weapon(2));
-        unenablePlayer1Buttons();
+        disablePlayer1Buttons();
         enablePlayer2Buttons();
     }//GEN-LAST:event_scissorsP1BtnActionPerformed
 
     private void sawP1BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sawP1BtnActionPerformed
         player1ChoiceLabel.setIcon(sawImage);
         game.assignPlayerWeapon(0, new Weapon(3));
-        unenablePlayer1Buttons();
+        disablePlayer1Buttons();
         enablePlayer2Buttons();
     }//GEN-LAST:event_sawP1BtnActionPerformed
 
@@ -333,7 +332,7 @@ public class GameDriverForm extends JFrame  {
         player2ChoiceLabel.setIcon(rockImage);
         showPCSelection();
         showRoundWinners();
-        unenablePlayer2Buttons();
+        disablePlayer2Buttons();
         
     }//GEN-LAST:event_rockP2btnActionPerformed
 
@@ -341,7 +340,7 @@ public class GameDriverForm extends JFrame  {
         game.assignPlayerWeapon(1, new Weapon(1));
         player2ChoiceLabel.setIcon(paperImage);
         showPCSelection();
-        unenablePlayer2Buttons();
+        disablePlayer2Buttons();
         showRoundWinners();
     }//GEN-LAST:event_paperP2BtnActionPerformed
 
@@ -349,7 +348,7 @@ public class GameDriverForm extends JFrame  {
         game.assignPlayerWeapon(1, new Weapon(2));
         player2ChoiceLabel.setIcon(scissorsImage);
         showPCSelection();
-        unenablePlayer2Buttons();
+        disablePlayer2Buttons();
         showRoundWinners();
     }//GEN-LAST:event_scissorsP2BtnActionPerformed
 
@@ -357,36 +356,37 @@ public class GameDriverForm extends JFrame  {
         game.assignPlayerWeapon(1, new Weapon(3));
         player2ChoiceLabel.setIcon(sawImage);
         showPCSelection();
-        unenablePlayer2Buttons();
+        disablePlayer2Buttons();
         showRoundWinners();
     }//GEN-LAST:event_sawP2BtnActionPerformed
 
     private void newRoundButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRoundButtonActionPerformed
 
-        if (game.getRound() == game.getROUNDS_PER_GAME()) {            
+        if (game.getRound() == game.getROUNDS_PER_GAME()) {
             String[] options = {"Menu"};
-          //  JOptionPane.showOptionDialog(null, game.gameWinners(player1, player2),
-              JOptionPane.showOptionDialog(null, game.gameWinners(game.getPlayer(0), game.getPlayer(1)),
+             //JOptionPane.showOptionDialog(null, game.gameWinners(player1, player2),
+            JOptionPane.showOptionDialog(null, game.gameWinners(game.getPlayer(0), game.getPlayer(1)),
                     "Winners of the Game",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-              game.getPlayer(0).getPlayerStats().updateRoundRecords();
-              game.getPlayer(1).getPlayerStats().updateRoundRecords();
-              
+            game.getPlayer(0).getPlayerStats().updateRoundRecords();
+            game.getPlayer(1).getPlayerStats().updateRoundRecords();
+            game.resetRound();
+            gameScreen.setVisible(false);
+            game = menu.displayMenu(game, players, gameScreen);
             
-           gameScreen.setVisible(false);
-           displayMenu();
         } else {
             game.generateComputerPlay();
             enablePlayer1Buttons();
             resetControls();
             game.incrementRound();
             JOptionPane.showMessageDialog(null, "Round # " + Integer.toString(game.getRound()));
-                       
-        }  
+
+        }
     }//GEN-LAST:event_newRoundButtonActionPerformed
 
     //Show the images of the PCWeapon
     public void showPCSelection() {
+       // game.generateComputerPlay();
         if (game.getCPUWeapon().getWeaponType().equals("Rock")) {
             computerChoiceLabel.setIcon(rockImage);
         } else if (game.getCPUWeapon().getWeaponType().equals("Paper")) {
@@ -411,6 +411,7 @@ public class GameDriverForm extends JFrame  {
         }
     }
     
+    
     //Clean the control after each round
     public void resetControls(){
         computerChoiceLabel.setIcon(null);
@@ -420,11 +421,12 @@ public class GameDriverForm extends JFrame  {
         resultP2PCLabel.setText("");
     }
     
-    public void unenablePlayer1Buttons(){
+    public void disablePlayer1Buttons(){
       rockP1Btn.setEnabled(false);
       paperP1Btn.setEnabled(false);
       scissorsP1Btn.setEnabled(false);
       sawP1Btn.setEnabled(false);
+      
       
     }
     
@@ -437,7 +439,7 @@ public class GameDriverForm extends JFrame  {
     }
     
     
-     private void unenablePlayer2Buttons(){
+     private void disablePlayer2Buttons(){
       rockP2btn.setEnabled(false);
       paperP2Btn.setEnabled(false);
       scissorsP2Btn.setEnabled(false);
@@ -452,38 +454,6 @@ public class GameDriverForm extends JFrame  {
       sawP2Btn.setEnabled(true);
     }
      
-    public static void displayMenu(){
-    
-         selectionMenu = menu.displayMenu();
-          if(selectionMenu == 1)
-       {  
-          // create an instance of Game and start the game when user selects that option
-          game = new Game(players);
-          gameScreen = new GameDriverForm();
-          gameScreen.setLocationRelativeTo(null);
-          gameScreen.setVisible(true);
-          game.generateComputerPlay();
-          JOptionPane.showMessageDialog(null, "Round # " + Integer.toString(game.getRound()));
-          
-       }
-        if (selectionMenu == 2) {
-            String[] options = {"Menu"};
-            JOptionPane.showOptionDialog(null, game.displayRules(),
-                    "Game Rules",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-           displayMenu();
-
-        }
-        
-        if (selectionMenu == 3) {
-           String[] options = {"Menu"};
-            JOptionPane.showOptionDialog(null, players[0].getPlayerStats().printResults(player1) + "\n\n" + players[1].getPlayerStats().printResults(player2) + "\n\n"
-                    + players[0].getPlayerStats().overallGameHumanWinner(player1, player2),
-                    "Game Statistics",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-           displayMenu();      
-        }
-    }
 
     public static void main(String args[]) {
           
@@ -499,8 +469,7 @@ public class GameDriverForm extends JFrame  {
         } else {
             System.exit(0);
         }
-        
-      
+             
         String player2Name = JOptionPane.showInputDialog("What is the name of the second Player?");
 
         if (player2Name != null) {
@@ -534,10 +503,11 @@ public class GameDriverForm extends JFrame  {
         players[1] = player2;
        
      
-       game = new Game(players);
+       game = new Game(players); 
+       gameScreen = new GameDriverForm();
        
        //display Menu
-       displayMenu();
+       game = menu.displayMenu(game, players, gameScreen);
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

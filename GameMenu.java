@@ -1,5 +1,6 @@
 
 
+
 import javax.swing.JOptionPane;
 
 
@@ -10,16 +11,16 @@ public class GameMenu {
 	GameMenu(){
 	}
 	
-	public int displayMenu(){
+	public Game displayMenu(Game game, Player[] players, GameDriverForm gameScreen){
 	String  optionS;
-        int menuChoice;
+        
         
         do{
             
             optionS = JOptionPane.showInputDialog("Please select an option to continue.."
-				+ "\n 1: Play game."
+				+ "\n 1: Play Game."
 				+ "\n 2: Show Game Rules."
-				+ "\n 3: Show Stastics."
+				+ "\n 3: Show Statistics."
 				+ "\n 4: Exit.");
             
            if ( optionS == null)
@@ -40,16 +41,40 @@ public class GameMenu {
                     System.exit(0);
 
             }		
-             
-             
+                     
             menuChoice = Integer.parseInt(optionS);
-            
-            switch(menuChoice){
-                case 1:  
+           
+          }while (menuChoice < 1 || menuChoice > 4); 
+        
+          switch(menuChoice){
+                case 1:
+                    
+                    game = new Game(players);
+                    game.generateComputerPlay();
+                    gameScreen.setLocationRelativeTo(null);
+                    gameScreen.enablePlayer1Buttons();
+                    gameScreen.resetControls();
+                    gameScreen.setVisible(true);
+                    
+                    JOptionPane.showMessageDialog(null, "Round # " + Integer.toString(game.getRound()));
+                    
                     break;
                 case 2:
+                    String[] options = {"Menu"};
+                    int res =JOptionPane.showOptionDialog(null, game.displayRules(),
+                            "Game Rules",
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                   
+                    game = displayMenu(game, players, gameScreen);
                     break;
                 case 3:
+                    String[] option = {"Menu"};
+
+                    JOptionPane.showOptionDialog(null, players[0].getPlayerStats().printResults(game.getPlayers()[0]) + "\n\n" + players[1].getPlayerStats().printResults(game.getPlayers()[1]) + "\n\n"
+                    + players[0].getPlayerStats().overallGameHumanWinner(game.getPlayers()[0], game.getPlayers()[1]),
+                    "Game Statistics",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, option, option[0]);
+                     game = displayMenu(game, players, gameScreen);
                     break;
                 case 4:
                     JOptionPane.showMessageDialog(null, "Goodbye!");
@@ -60,12 +85,13 @@ public class GameMenu {
                     break;
                                                                
             }
-        }while (menuChoice < 1 || menuChoice > 4);
+       
         
-        return menuChoice;
+       return game;
+    
+    }
         
-	}
-	
+  
     public int menuSelection() {
 
         return menuChoice;
